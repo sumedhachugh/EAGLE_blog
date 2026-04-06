@@ -113,7 +113,7 @@ MathJax = {
 
     <p>This isn't a contrived scenario. It's a well-documented weakness of perturbation-based explanation methods. The approaches like LIME, GLIME, BayesLIME, and others work by generating random perturbations around an input, querying the black-box model, and fitting a simple surrogate to approximate local behavior. The idea is elegant, but the execution has a fundamental flaw: <strong>the quality of the explanation depends entirely on which perturbations you happen to sample</strong>.</p>
 
-    <p>Random or heuristic sampling leads to explanations that vary across runs, miss important regions of the input space, and provide no measure of how confident you should be in the result. When explanations are unstable and come without uncertainty estimates, they can be worse than no explanation at all, they create a false sense of understanding.</p>
+    <p>Random or heuristic sampling leads to explanations that vary across runs, miss important regions of the input space, and provide no measure of how confident we should be in the result. When explanations are unstable and come without uncertainty estimates, they can be worse than no explanation at all, they create a false sense of understanding.</p>
 
     <p>This raises a natural question:</p>
 
@@ -122,7 +122,7 @@ MathJax = {
       <p>If we only get a limited budget of black-box queries, how should we choose perturbations to learn the most about what the model is doing locally, and how confident can we be in the resulting explanation?</p>
     </div>
 
-    <p>This is the question our work, <strong>EAGLE</strong> (Expected Active Gain for Local Explanations), sets out to answer. Rather than treating perturbation generation as a preprocessing step, EAGLE reframes it as a sequential decision problem: at each step, choose the perturbation that will teach you the most about the model's local behavior.</p>
+    <p>This is the question our work, <strong>EAGLE</strong> (Expected Active Gain for Local Explanations), sets out to answer. Rather than treating perturbation generation as a preprocessing step, EAGLE reframes it as a sequential decision problem: at each step, choose the perturbation that will teach us the most about the model's local behavior.</p>
 
     <div class="divider"></div>
 
@@ -202,14 +202,14 @@ MathJax = {
     <div class="divider"></div>
 
     <h2>Theoretical Guarantees</h2>
-    <p>A key advantage of EAGLE's principled derivation is that it enables formal theoretical analysis — something rarely available for perturbation-based explainers. Most existing methods are designed by intuition and validated only empirically. EAGLE comes with provable bounds that tell you exactly what to expect.</p>
+    <p>A key advantage of EAGLE's principled derivation is that it enables formal theoretical analysis — something rarely available for perturbation-based explainers. Most existing methods are designed by intuition and validated only empirically. EAGLE comes with provable bounds that tell us exactly what to expect.</p>
 
     <h3>The Diminishing Returns Phenomenon</h3>
     <p>We prove (Lemma 1) that the cumulative information gained under EAGLE's acquisition strategy grows as $\mathcal{O}(d \log t)$, where $d$ is the feature dimension and $t$ is the number of queries. What does this mean practically?</p>
 
     <p>The first few perturbations are enormously informative, they rapidly carve out the shape of the local decision boundary. But each subsequent perturbation teaches a little less than the one before. This is good news, as it means EAGLE front-loads the most valuable queries. If the query budget is tight, EAGLE extracts maximum value from every single black-box call. The multiplicative factor $d$ tells us that higher-dimensional problems need proportionally more queries, which matches intuition as more features means more directions to explore.</p>
 
-    <h3>How Many Queries Do You Need?</h3>
+    <h3>How Many Queries Do We Need?</h3>
     <p>We derive high-probability bounds on the estimation error of the explanation weights (Theorem 2), which lead to a concrete sample complexity result:</p>
 
     <div class="equation-card">
@@ -218,7 +218,7 @@ MathJax = {
       <div class="note">Queries grow linearly with dimension $d$, logarithmically with confidence $1/\delta$, and quadratically with inverse accuracy $1/\nu^2$.</div>
     </div>
 
-    <p>This result gives practitioners a practical recipe. Want tighter explanations (smaller $\nu$)? You'll need quadratically more queries — that's the price of precision. But want higher confidence (smaller $\delta$, i.e., stronger guarantees that the explanation is close to the truth)? That only costs a mild logarithmic penalty. In a credit scoring model with 20 features, for instance, you can get a reliable explanation with a budget that scales as roughly $20 \times \log(\text{confidence})$, not $20^2$ — and EAGLE tells you exactly when to stop querying.</p>
+    <p>This shows that we'll need quadratically more queries for tighter explanations, that's the price of precision. But for higher confidence (smaller $\delta$, i.e., stronger guarantees that the explanation is close to the truth)? That only costs a mild logarithmic penalty. In a credit scoring model with 20 features, for instance, we can get a reliable explanation with a budget that scales as roughly $20 \times \log(\text{confidence})$, not $20^2$, and EAGLE tells us exactly when to stop querying.</p>
 
     <div class="divider"></div>
 
@@ -263,11 +263,11 @@ MathJax = {
     <p>Perhaps the most practically relevant result: we measured how many queries EAGLE needs to match the performance that BayesLIME achieves at its full budget of 500 queries. On D-efficiency, EAGLE matches BayesLIME@500 using only 310–390 queries — a saving of 22–38%. On the CCM metric (which combines sign stability and rank consistency), the savings are even more dramatic: 52–88%. On MNIST, EAGLE at just 60 queries produces explanations as consistent as BayesLIME at 500.</p>
 
     <h3>And It's Faster Too</h3>
-    <p>You might expect the active learning loop to add computational overhead, but EAGLE is actually <strong>faster</strong> than BayesLIME. At N=500 on COMPAS, EAGLE takes 8.16 seconds versus BayesLIME's 14.56 seconds — a nearly 44% reduction. The reason? EAGLE's acquisition function has a closed-form solution (a matrix-vector product), avoiding the expensive optimization loops that other Bayesian methods require. On ImageNet, the speedup is even more pronounced: 7.08s versus 34.73s.</p>
+    <p>One might expect the active learning loop to add computational overhead, but EAGLE is actually <strong>faster</strong> than BayesLIME. At N=500 on COMPAS, EAGLE takes 8.16 seconds versus BayesLIME's 14.56 seconds — a nearly 44% reduction. The reason? EAGLE's acquisition function has a closed-form solution (a matrix-vector product), avoiding the expensive optimization loops that other Bayesian methods require. On ImageNet, the speedup is even more pronounced: 7.08s versus 34.73s.</p>
 
     <div class="divider"></div>
 
-    <h2>Tighter Uncertainty: Knowing What You Don't Know</h2>
+    <h2>Tighter Uncertainty: Knowing What We Don't Know</h2>
     <p>Beyond producing stable point estimates, EAGLE yields <strong>significantly narrower credible intervals</strong> on feature attributions. The 90% posterior credible intervals from EAGLE are consistently tighter than those from BayesLIME and BayLIME across all features, meaning practitioners can more confidently separate genuinely important features from noise.</p>
 
     <p>To make this concrete, consider a spam detection example from our paper. Given the message <em>"Hi mom, thanks for the great lunch yesterday. Also don't forget to call 08001234567 NOW to win your FREE prize!"</em>, EAGLE's explanation correctly highlights spam-indicative words like "FREE," "prize," "NOW," and "win" with strong positive attributions (green), while personal words like "mom," "thanks," and "lunch" get negative attributions (red, i.e., evidence against spam). Crucially, the border thickness around each word encodes the uncertainty — and EAGLE's borders are thin, meaning it's confident in these attributions.</p>
