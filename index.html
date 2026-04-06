@@ -113,13 +113,13 @@ MathJax = {
 
     <p>This isn't a contrived scenario. It's a well-documented weakness of perturbation-based explanation methods. The approaches like LIME, GLIME, BayesLIME, and others work by generating random perturbations around an input, querying the black-box model, and fitting a simple surrogate to approximate local behavior. The idea is elegant, but the execution has a fundamental flaw: <strong>the quality of the explanation depends entirely on which perturbations you happen to sample</strong>.</p>
 
-    <p>Random or heuristic sampling leads to explanations that vary across runs, miss important regions of the input space, and provide no measure of how confident you should be in the result. When explanations are unstable and come without uncertainty estimates, they can be worse than no explanation at all — they create a false sense of understanding.</p>
+    <p>Random or heuristic sampling leads to explanations that vary across runs, miss important regions of the input space, and provide no measure of how confident you should be in the result. When explanations are unstable and come without uncertainty estimates, they can be worse than no explanation at all, they create a false sense of understanding.</p>
 
     <p>This raises a natural question:</p>
 
     <div class="callout">
       <div class="callout-label">The Core Question</div>
-      <p>If we only get a limited budget of black-box queries, how should we choose perturbations to learn the most about what the model is doing locally — and how confident can we be in the resulting explanation?</p>
+      <p>If we only get a limited budget of black-box queries, how should we choose perturbations to learn the most about what the model is doing locally, and how confident can we be in the resulting explanation?</p>
     </div>
 
     <p>This is the question our work, <strong>EAGLE</strong> (Expected Active Gain for Local Explanations), sets out to answer. Rather than treating perturbation generation as a preprocessing step, EAGLE reframes it as a sequential decision problem: at each step, choose the perturbation that will teach you the most about the model's local behavior.</p>
@@ -127,7 +127,7 @@ MathJax = {
     <div class="divider"></div>
 
     <h2>Why Existing Methods Fall Short</h2>
-    <p>To understand what EAGLE does differently, it helps to see where current methods struggle. The figure below (from our paper) shows how different methods sample perturbations around a target instance on a simple 2D dataset. The differences are striking.</p>
+    <p>To understand what EAGLE does differently, it helps to see where current methods struggle. The figure below (from our paper) shows how different methods sample perturbations around a target instance on a simple 2D dataset.</p>
 
     <p><strong>LIME and BayLIME</strong> sample broadly in the vicinity of the instance but ignore regions where the surrogate model is uncertain. They may waste queries on areas that are already well-understood. <strong>GLIME</strong> goes to the other extreme — constraining perturbations so tightly around the instance that it misses the broader local structure, including the decision boundary. <strong>BayesLIME</strong> does consider uncertainty, but only through predictive variance, which doesn't account for the locality of new candidates. It can drift toward uninformative regions far from the instance.</p>
 
@@ -145,19 +145,42 @@ MathJax = {
     <h2>EAGLE: Active Learning Meets Explainability</h2>
     <p>EAGLE reframes perturbation selection for post-hoc explanations as an <strong>information-theoretic active learning problem</strong>. The core idea is simple: instead of generating perturbations blindly and hoping they're informative, EAGLE iteratively asks — <em>"given everything I've learned so far, which perturbation would teach me the most about the model's local behavior?"</em></p>
 
-    <p>The framework builds on a Bayesian linear regression (BLR) surrogate — the same kind used by BayesLIME — which naturally provides uncertainty estimates over feature attributions through posterior distributions. What changes is the sampling strategy: EAGLE replaces heuristic perturbation selection with a principled acquisition function derived from expected information gain (EIG).</p>
+    <p>The framework builds on a Bayesian linear regression (BLR) surrogate, which naturally provides uncertainty estimates over feature attributions through posterior distributions. EAGLE replaces heuristic perturbation selection with a principled acquisition function derived from expected information gain (EIG).</p>
 
     <p>Here's how a single explanation is produced:</p>
 
-    <div class="flow-diagram">
-      <div class="flow-step"><div class="step-num">Step 1</div><div class="step-text">Seed perturbations around instance x₀</div></div>
-      <div class="flow-arrow">→</div>
-      <div class="flow-step"><div class="step-num">Step 2</div><div class="step-text">Fit Bayesian linear surrogate</div></div>
-      <div class="flow-arrow">→</div>
-      <div class="flow-step"><div class="step-num">Step 3</div><div class="step-text">Score candidates via acquisition function</div></div>
-      <div class="flow-arrow">→</div>
-      <div class="flow-step"><div class="step-num">Step 4</div><div class="step-text">Select top-B, query black-box, refit</div></div>
+<div style="max-width: 520px; margin: 2.5rem auto;">
+  <div style="display: flex; align-items: center; gap: 16px; margin-bottom: 4px;">
+    <div style="min-width: 28px; height: 28px; border-radius: 50%; background: var(--accent); color: #fff; display: flex; align-items: center; justify-content: center; font-size: 13px; font-weight: 600;">1</div>
+    <div style="flex: 1; background: var(--card-bg); border: 1px solid var(--border); border-radius: 10px; padding: 12px 18px;">
+      <div style="font-size: 14.5px; font-weight: 500; color: var(--text);">Seed perturbations around instance $x_0$</div>
     </div>
+  </div>
+  <div style="width: 1px; height: 20px; background: var(--border); margin-left: 14px;"></div>
+  <div style="display: flex; align-items: center; gap: 16px; margin-bottom: 4px;">
+    <div style="min-width: 28px; height: 28px; border-radius: 50%; background: var(--accent); color: #fff; display: flex; align-items: center; justify-content: center; font-size: 13px; font-weight: 600;">2</div>
+    <div style="flex: 1; background: var(--card-bg); border: 1px solid var(--border); border-radius: 10px; padding: 12px 18px;">
+      <div style="font-size: 14.5px; font-weight: 500; color: var(--text);">Fit Bayesian linear regression surrogate</div>
+    </div>
+  </div>
+  <div style="width: 1px; height: 20px; background: var(--border); margin-left: 14px;"></div>
+  <div style="display: flex; align-items: center; gap: 16px; margin-bottom: 4px;">
+    <div style="min-width: 28px; height: 28px; border-radius: 50%; background: var(--accent); color: #fff; display: flex; align-items: center; justify-content: center; font-size: 13px; font-weight: 600;">3</div>
+    <div style="flex: 1; background: var(--card-bg); border: 1px solid var(--border); border-radius: 10px; padding: 12px 18px;">
+      <div style="font-size: 14.5px; font-weight: 500; color: var(--text);">Score candidate perturbations via $\pi_{x_0}(z) \cdot z^\top V_\phi z$</div>
+    </div>
+  </div>
+  <div style="width: 1px; height: 20px; background: var(--border); margin-left: 14px;"></div>
+  <div style="display: flex; align-items: center; gap: 16px;">
+    <div style="min-width: 28px; height: 28px; border-radius: 50%; background: var(--accent); color: #fff; display: flex; align-items: center; justify-content: center; font-size: 13px; font-weight: 600;">4</div>
+    <div style="flex: 1; background: var(--card-bg); border: 1px solid var(--border); border-radius: 10px; padding: 12px 18px;">
+      <div style="font-size: 14.5px; font-weight: 500; color: var(--text);">Select top-B candidates, query black-box, refit</div>
+    </div>
+  </div>
+  <div style="display: flex; align-items: center; gap: 8px; margin: 12px 0 0 44px;">
+    <div style="font-size: 12px; color: var(--text-secondary); font-style: italic;">↻ Repeat steps 2–4 until budget N is exhausted</div>
+  </div>
+</div>
 
     <h3>The Acquisition Function: Where the Magic Happens</h3>
     <p>The key theoretical result of our work (Theorem 1) shows that maximizing the expected information gain in the Bayesian linear surrogate simplifies to an elegant closed-form acquisition rule:</p>
@@ -184,7 +207,7 @@ MathJax = {
     <h3>The Diminishing Returns Phenomenon</h3>
     <p>We prove (Lemma 1) that the cumulative information gained under EAGLE's acquisition strategy grows as $\mathcal{O}(d \log t)$, where $d$ is the feature dimension and $t$ is the number of queries. What does this mean practically?</p>
 
-    <p>The first few perturbations are enormously informative — they rapidly carve out the shape of the local decision boundary. But each subsequent perturbation teaches you a little less than the one before. This is the diminishing returns phenomenon, and it's actually good news: it means EAGLE front-loads the most valuable queries. If you have a tight query budget, EAGLE extracts maximum value from every single black-box call. The multiplicative factor $d$ tells us that higher-dimensional problems need proportionally more queries, which matches intuition — more features means more directions to explore.</p>
+    <p>The first few perturbations are enormously informative, they rapidly carve out the shape of the local decision boundary. But each subsequent perturbation teaches a little less than the one before. This is good news, as it means EAGLE front-loads the most valuable queries. If the query budget is tight, EAGLE extracts maximum value from every single black-box call. The multiplicative factor $d$ tells us that higher-dimensional problems need proportionally more queries, which matches intuition as more features means more directions to explore.</p>
 
     <h3>How Many Queries Do You Need?</h3>
     <p>We derive high-probability bounds on the estimation error of the explanation weights (Theorem 2), which lead to a concrete sample complexity result:</p>
