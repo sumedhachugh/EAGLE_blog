@@ -223,7 +223,7 @@ MathJax = {
     <div class="divider"></div>
 
     <h2>Does It Actually Work? Empirical Results</h2>
-    <p>Theory is only half the story. We evaluated EAGLE across six datasets — four tabular (COMPAS, German Credit, Adult Income, Magic Gamma Telescope) and two image (MNIST, ImageNet) — against eight baselines including LIME, GLIME, BayLIME, BayesLIME, US-LIME, Tilia, DLIME, and UnRAvEL. The short answer: EAGLE consistently outperforms across the board.</p>
+    <p>We evaluated EAGLE across six datasets: four tabular (COMPAS, German Credit, Adult Income, Magic Gamma Telescope) and two image (MNIST, ImageNet); against eight baselines including LIME, GLIME, BayLIME, BayesLIME, US-LIME, Tilia, DLIME, and UnRAvEL. The short answer: EAGLE consistently outperforms across the board.</p>
 
     <div class="results-grid">
       <div class="result-card"><div class="metric">0.822</div><div class="metric-label">Jaccard stability on Adult (vs. 0.674 BayesLIME)</div></div>
@@ -233,7 +233,7 @@ MathJax = {
     </div>
 
     <h3>Explanation Stability</h3>
-    <p>We measured the pairwise Jaccard similarity of top-5 features across repeated explanation runs. A score of 1.0 means every run identifies the same top features; lower values mean the explanation is a lottery. EAGLE consistently achieves the highest or near-highest stability across datasets. Notably, while some baselines like Tilia or GLIME shine on individual datasets (Tilia on COMPAS, GLIME on ImageNet), their performance varies considerably across tasks. EAGLE is the only method that maintains consistently strong performance across both tabular and image domains — it doesn't have a weak spot.</p>
+    <p>We measured the pairwise Jaccard similarity of top-5 features across repeated explanation runs. EAGLE consistently achieves the highest or near-highest stability across datasets. Notably, while some baselines like Tilia or GLIME shine on individual datasets (Tilia on COMPAS, GLIME on ImageNet), their performance varies considerably across tasks. EAGLE is the only method that maintains consistently strong performance across both tabular and image domains.</p>
 
     <div class="table-wrapper">
       <table>
@@ -250,7 +250,7 @@ MathJax = {
     </div>
 
     <h3>Sampling Quality & Convergence</h3>
-    <p>We measured D-efficiency (reduction in posterior covariance volume) and cumulative information gain (CIG) as perturbations are acquired. EAGLE exhibits a steeper convergence trajectory from the very first acquisition steps — at n=500, it achieves roughly 1.5× the D-efficiency of BayesLIME and BayLIME. More importantly, the D-efficiency curves grow linearly in the plot (logarithmically in $t$), exactly matching the $\mathcal{O}(d \log t)$ scaling predicted by our Lemma 1. It's always reassuring when theory and experiments agree.</p>
+    <p>We measured D-efficiency (reduction in posterior covariance volume) and cumulative information gain (CIG) as perturbations are acquired. EAGLE exhibits a steeper convergence trajectory from the very first acquisition steps. At n=500, it achieves roughly 1.5× the D-efficiency of BayesLIME and BayLIME. More importantly, the D-efficiency curves grow linearly in the plot (logarithmically in $t$), exactly matching the $\mathcal{O}(d \log t)$ scaling predicted by our Lemma 1. It's reassuring when theory and experiments agree.</p>
 
     <div class="figure" style="margin: 2.5rem 0;">
       <div style="background: var(--card-bg); border: 1px solid var(--border); border-radius: 12px; padding: 1.5rem; box-shadow: 0 2px 12px rgba(0,0,0,0.04); overflow: hidden;">
@@ -260,7 +260,7 @@ MathJax = {
     </div>
 
     <h3>Sample Efficiency: Doing More with Less</h3>
-    <p>Perhaps the most practically relevant result: we measured how many queries EAGLE needs to match the performance that BayesLIME achieves at its full budget of 500 queries. On D-efficiency, EAGLE matches BayesLIME@500 using only 310–390 queries — a saving of 22–38%. On the CCM metric (which combines sign stability and rank consistency), the savings are even more dramatic: 52–88%. On MNIST, EAGLE at just 60 queries produces explanations as consistent as BayesLIME at 500.</p>
+    <p>We measured how many queries EAGLE needs to match the performance that BayesLIME achieves at its full budget of 500 queries. On D-efficiency, EAGLE matches BayesLIME@500 using only 310–390 queries, a saving of 22–38%. On the CCM metric (which combines sign stability and rank consistency), the savings are even more dramatic: 52–88%. On MNIST, EAGLE at just 60 queries produces explanations as consistent as BayesLIME at 500.</p>
 
     <h3>And It's Faster Too</h3>
     <p>One might expect the active learning loop to add computational overhead, but EAGLE is actually <strong>faster</strong> than BayesLIME. At N=500 on COMPAS, EAGLE takes 8.16 seconds versus BayesLIME's 14.56 seconds — a nearly 44% reduction. The reason? EAGLE's acquisition function has a closed-form solution (a matrix-vector product), avoiding the expensive optimization loops that other Bayesian methods require. On ImageNet, the speedup is even more pronounced: 7.08s versus 34.73s.</p>
@@ -279,29 +279,26 @@ MathJax = {
       <div class="figure-caption">EAGLE's word-level attributions for spam detection. Green highlights positive contributions toward SPAM, red indicates negative contributions, and border thickness represents attribution uncertainty.</div>
     </div>
 
-    <p>This matters in practice. In a recidivism prediction model, knowing that "prior offenses" has an attribution of $0.15 \pm 0.02$ versus $0.15 \pm 0.12$ is the difference between an actionable explanation and a meaningless one. The first says "this feature clearly matters"; the second says "we're not really sure."</p>
-
     <div class="divider"></div>
 
     <h2>The Bigger Picture</h2>
-    <p>Post-hoc explanation methods sit at a critical juncture in the AI pipeline. They're often the last line of defense between an opaque model and the people affected by its decisions — patients, loan applicants, defendants. If these explanations are unreliable, the entire accountability chain breaks down.</p>
+    <p>Post-hoc explanation methods sit at a critical juncture in the AI pipeline. They're often the last line of defense between an opaque model and the people affected by its decisions. If these explanations are unreliable, the entire accountability chain breaks down.</p>
 
-    <p>EAGLE addresses this at a foundational level. By recasting perturbation selection as an information-theoretic optimization problem, it shifts the paradigm from "generate perturbations and hope for the best" to "systematically extract the maximum amount of local information from every black-box query." The result isn't just better numbers on a benchmark — it's explanations that practitioners can actually trust, backed by both theoretical guarantees and empirical evidence.</p>
+    <p>EAGLE addresses this at a foundational level. By recasting perturbation selection as an information-theoretic optimization problem, it shifts the paradigm from "generate perturbations and hope for the best" to "systematically extract the maximum amount of local information from every black-box query." The result isn't just better numbers on a benchmark, it's explanations that practitioners can actually trust, backed by both theoretical guarantees and empirical evidence.</p>
 
     <div class="callout">
       <div class="callout-label">Key Takeaways</div>
       <p><strong>Principled acquisition:</strong> EAGLE derives a closed-form acquisition function from information-theoretic first principles, replacing ad-hoc heuristics with a mathematically grounded strategy.</p>
-      <p><strong>Theoretical guarantees:</strong> $\mathcal{O}(d \log t)$ information gain bounds and sample complexity guarantees — rare in the post-hoc explainability literature, and practically useful for budgeting queries.</p>
-      <p><strong>Consistent improvements:</strong> Higher stability, faster convergence, tighter uncertainty, and lower runtime across both tabular and image benchmarks — with no dataset-specific tuning.</p>
-      <p><strong>Drop-in compatible:</strong> EAGLE uses the same BLR surrogate as BayesLIME, so the improvement comes purely from smarter sampling. Switching is straightforward.</p>
+      <p><strong>Theoretical guarantees:</strong> $\mathcal{O}(d \log t)$ information gain bounds and sample complexity guarantees, rare in the post-hoc explainability literature, and practically useful for budgeting queries.</p>
+      <p><strong>Consistent improvements:</strong> Higher stability, faster convergence, tighter uncertainty, and lower runtime across both tabular and image benchmarks.</p>
     </div>
 
     <div class="divider"></div>
 
     <h2>Looking Ahead</h2>
-    <p>EAGLE opens several exciting research directions. The current greedy top-B batch selection could be replaced with batch-optimal strategies that account for redundancy between selected perturbations. Extending the framework to non-linear surrogates — perhaps using Bayesian neural networks or Gaussian processes — could capture more complex local decision boundaries. And integrating faithfulness metrics (like comprehensiveness and sufficiency) directly into the active learning loop could produce explanations that are not only stable and confident, but also faithful to the black-box model's true behavior.</p>
+    <p>EAGLE opens several exciting research directions. The current greedy top-B batch selection could be replaced with batch optimal strategies that account for redundancy between selected perturbations. Extending the framework to non-linear surrogates, perhaps using Bayesian neural networks or Gaussian processes could capture more complex local decision boundaries.</p>
 
-    <p>More broadly, we see EAGLE as evidence that the tools of Bayesian experimental design and active learning — developed over decades in statistics and machine learning — have a natural and important role to play in making AI systems more transparent. The explanations we produce should be held to the same standards of rigor as the models they explain.</p>
+    <p>More broadly, we see EAGLE as evidence that the tools of Bayesian experimental design and active learning, have a natural and important role to play in making AI systems more transparent. The explanations we produce should be held to the same standards of rigor as the models they explain.</p>
 
     <div style="margin-top: 3rem; padding: 2rem; background: var(--code-bg); border-radius: 12px; text-align: center;">
       <p style="margin-bottom: 0.5rem; color: var(--text); font-weight: 500;">Read the full paper</p>
