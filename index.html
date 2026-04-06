@@ -5,6 +5,13 @@
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 <title>EAGLE: Smarter Perturbations for Trustworthy AI Explanations</title>
 <link href="https://fonts.googleapis.com/css2?family=Instrument+Serif:ital@0;1&family=DM+Sans:ital,wght@0,300;0,400;0,500;0,600;1,400&family=JetBrains+Mono:wght@400;500&display=swap" rel="stylesheet">
+<script>
+MathJax = {
+  tex: { inlineMath: [['$','$'], ['\\(','\\)']], displayMath: [['$$','$$'], ['\\[','\\]']] },
+  svg: { fontCache: 'global' }
+};
+</script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/mathjax/3.2.2/es5/tex-svg.min.js" async></script>
 <style>
   :root {
     --bg: #FAFAF7;
@@ -19,496 +26,70 @@
     --card-bg: #fff;
     --eagle-gradient: linear-gradient(135deg, #C0392B 0%, #8E44AD 100%);
   }
-
   * { margin: 0; padding: 0; box-sizing: border-box; }
-
-  body {
-    font-family: 'DM Sans', sans-serif;
-    background: var(--bg);
-    color: var(--text);
-    line-height: 1.75;
-    font-size: 17px;
-    -webkit-font-smoothing: antialiased;
-  }
-
-  /* ─── HERO ─── */
-  .hero {
-    position: relative;
-    min-height: 92vh;
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    overflow: hidden;
-    background: #0D0D0D;
-    color: #fff;
-  }
-
-  .hero::before {
-    content: '';
-    position: absolute;
-    inset: 0;
-    background:
-      radial-gradient(ellipse 80% 60% at 30% 50%, rgba(192,57,43,0.15) 0%, transparent 70%),
-      radial-gradient(ellipse 60% 80% at 75% 60%, rgba(142,68,173,0.1) 0%, transparent 70%);
-  }
-
-  .hero-grid {
-    position: absolute;
-    inset: 0;
-    background-image:
-      linear-gradient(rgba(255,255,255,0.03) 1px, transparent 1px),
-      linear-gradient(90deg, rgba(255,255,255,0.03) 1px, transparent 1px);
-    background-size: 60px 60px;
-  }
-
-  .hero-content {
-    position: relative;
-    z-index: 2;
-    max-width: 820px;
-    padding: 2rem;
-    text-align: center;
-  }
-
-  .hero-badge {
-    display: inline-flex;
-    align-items: center;
-    gap: 8px;
-    padding: 6px 18px;
-    border-radius: 100px;
-    border: 1px solid rgba(192,57,43,0.4);
-    background: rgba(192,57,43,0.1);
-    font-size: 13px;
-    font-weight: 500;
-    letter-spacing: 0.5px;
-    text-transform: uppercase;
-    color: #E74C3C;
-    margin-bottom: 2rem;
-    animation: fadeUp 0.8s ease both;
-  }
-
-  .hero-badge::before {
-    content: '';
-    width: 6px; height: 6px;
-    border-radius: 50%;
-    background: #E74C3C;
-    animation: pulse 2s infinite;
-  }
-
-  @keyframes pulse {
-    0%, 100% { opacity: 1; }
-    50% { opacity: 0.3; }
-  }
-
-  .hero h1 {
-    font-family: 'Instrument Serif', serif;
-    font-size: clamp(2.8rem, 6vw, 5rem);
-    font-weight: 400;
-    line-height: 1.1;
-    margin-bottom: 1.5rem;
-    animation: fadeUp 0.8s 0.15s ease both;
-  }
-
-  .hero h1 em {
-    font-style: italic;
-    background: var(--eagle-gradient);
-    -webkit-background-clip: text;
-    -webkit-text-fill-color: transparent;
-    background-clip: text;
-  }
-
-  .hero-sub {
-    font-size: 1.15rem;
-    color: rgba(255,255,255,0.6);
-    max-width: 600px;
-    margin: 0 auto 2.5rem;
-    line-height: 1.7;
-    animation: fadeUp 0.8s 0.3s ease both;
-  }
-
-  .hero-meta {
-    display: flex;
-    justify-content: center;
-    gap: 2rem;
-    flex-wrap: wrap;
-    font-size: 14px;
-    color: rgba(255,255,255,0.4);
-    animation: fadeUp 0.8s 0.45s ease both;
-  }
-
-  .hero-meta a {
-    color: rgba(255,255,255,0.6);
-    text-decoration: none;
-    border-bottom: 1px solid rgba(255,255,255,0.2);
-    transition: all 0.2s;
-  }
+  body { font-family: 'DM Sans', sans-serif; background: var(--bg); color: var(--text); line-height: 1.75; font-size: 17px; -webkit-font-smoothing: antialiased; }
+  .hero { position: relative; min-height: 92vh; display: flex; align-items: center; justify-content: center; overflow: hidden; background: #0D0D0D; color: #fff; }
+  .hero::before { content: ''; position: absolute; inset: 0; background: radial-gradient(ellipse 80% 60% at 30% 50%, rgba(192,57,43,0.15) 0%, transparent 70%), radial-gradient(ellipse 60% 80% at 75% 60%, rgba(142,68,173,0.1) 0%, transparent 70%); }
+  .hero-grid { position: absolute; inset: 0; background-image: linear-gradient(rgba(255,255,255,0.03) 1px, transparent 1px), linear-gradient(90deg, rgba(255,255,255,0.03) 1px, transparent 1px); background-size: 60px 60px; }
+  .hero-content { position: relative; z-index: 2; max-width: 820px; padding: 2rem; text-align: center; }
+  .hero-badge { display: inline-flex; align-items: center; gap: 8px; padding: 6px 18px; border-radius: 100px; border: 1px solid rgba(192,57,43,0.4); background: rgba(192,57,43,0.1); font-size: 13px; font-weight: 500; letter-spacing: 0.5px; text-transform: uppercase; color: #E74C3C; margin-bottom: 2rem; animation: fadeUp 0.8s ease both; }
+  .hero-badge::before { content: ''; width: 6px; height: 6px; border-radius: 50%; background: #E74C3C; animation: pulse 2s infinite; }
+  @keyframes pulse { 0%, 100% { opacity: 1; } 50% { opacity: 0.3; } }
+  .hero h1 { font-family: 'Instrument Serif', serif; font-size: clamp(2.8rem, 6vw, 5rem); font-weight: 400; line-height: 1.1; margin-bottom: 1.5rem; animation: fadeUp 0.8s 0.15s ease both; }
+  .hero h1 em { font-style: italic; background: var(--eagle-gradient); -webkit-background-clip: text; -webkit-text-fill-color: transparent; background-clip: text; }
+  .hero-sub { font-size: 1.15rem; color: rgba(255,255,255,0.6); max-width: 600px; margin: 0 auto 2.5rem; line-height: 1.7; animation: fadeUp 0.8s 0.3s ease both; }
+  .hero-meta { display: flex; justify-content: center; gap: 2rem; flex-wrap: wrap; font-size: 14px; color: rgba(255,255,255,0.4); animation: fadeUp 0.8s 0.45s ease both; }
+  .hero-meta a { color: rgba(255,255,255,0.6); text-decoration: none; border-bottom: 1px solid rgba(255,255,255,0.2); transition: all 0.2s; }
   .hero-meta a:hover { color: #E74C3C; border-color: #E74C3C; }
-
-  @keyframes fadeUp {
-    from { opacity: 0; transform: translateY(20px); }
-    to { opacity: 1; transform: translateY(0); }
-  }
-
-  /* ─── MAIN LAYOUT ─── */
-  .container {
-    max-width: 740px;
-    margin: 0 auto;
-    padding: 0 1.5rem;
-  }
-
-  article {
-    padding: 5rem 0;
-  }
-
-  /* ─── TYPOGRAPHY ─── */
-  h2 {
-    font-family: 'Instrument Serif', serif;
-    font-size: 2.2rem;
-    font-weight: 400;
-    margin: 3.5rem 0 1.2rem;
-    line-height: 1.25;
-  }
-
-  h3 {
-    font-family: 'DM Sans', sans-serif;
-    font-size: 1.2rem;
-    font-weight: 600;
-    margin: 2.5rem 0 0.8rem;
-    letter-spacing: -0.01em;
-  }
-
-  p {
-    margin-bottom: 1.4rem;
-    color: var(--text-secondary);
-  }
-
+  @keyframes fadeUp { from { opacity: 0; transform: translateY(20px); } to { opacity: 1; transform: translateY(0); } }
+  .container { max-width: 740px; margin: 0 auto; padding: 0 1.5rem; }
+  article { padding: 5rem 0; }
+  h2 { font-family: 'Instrument Serif', serif; font-size: 2.2rem; font-weight: 400; margin: 3.5rem 0 1.2rem; line-height: 1.25; }
+  h3 { font-family: 'DM Sans', sans-serif; font-size: 1.2rem; font-weight: 600; margin: 2.5rem 0 0.8rem; letter-spacing: -0.01em; }
+  p { margin-bottom: 1.4rem; color: var(--text-secondary); }
   p strong { color: var(--text); font-weight: 600; }
-
-  /* ─── CALLOUT BOXES ─── */
-  .callout {
-    background: var(--accent-bg);
-    border-left: 3px solid var(--accent);
-    padding: 1.5rem 1.8rem;
-    margin: 2rem 0;
-    border-radius: 0 8px 8px 0;
-  }
-
+  .callout { background: var(--accent-bg); border-left: 3px solid var(--accent); padding: 1.5rem 1.8rem; margin: 2rem 0; border-radius: 0 8px 8px 0; }
   .callout p { margin-bottom: 0; color: var(--text); font-size: 15.5px; }
   .callout p:not(:last-child) { margin-bottom: 0.8rem; }
-
-  .callout-label {
-    font-size: 11px;
-    font-weight: 600;
-    text-transform: uppercase;
-    letter-spacing: 1px;
-    color: var(--accent);
-    margin-bottom: 0.5rem;
-  }
-
-  /* ─── EQUATION CARD ─── */
-  .equation-card {
-    background: var(--card-bg);
-    border: 1px solid var(--border);
-    border-radius: 12px;
-    padding: 2rem;
-    margin: 2rem 0;
-    text-align: center;
-    box-shadow: 0 2px 12px rgba(0,0,0,0.04);
-  }
-
-  .equation-card .label {
-    font-size: 11px;
-    font-weight: 600;
-    text-transform: uppercase;
-    letter-spacing: 1.5px;
-    color: var(--accent);
-    margin-bottom: 1rem;
-  }
-
-  .equation-card code {
-    font-family: 'JetBrains Mono', monospace;
-    font-size: 1.1rem;
-    color: var(--text);
-    display: block;
-    line-height: 1.8;
-  }
-
-  .equation-card .note {
-    font-size: 14px;
-    color: var(--text-secondary);
-    margin-top: 1rem;
-    font-style: italic;
-  }
-
-  /* ─── COMPARISON TABLE ─── */
-  .table-wrapper {
-    overflow-x: auto;
-    margin: 2rem 0;
-    border-radius: 12px;
-    border: 1px solid var(--border);
-    background: var(--card-bg);
-    box-shadow: 0 2px 12px rgba(0,0,0,0.04);
-  }
-
-  table {
-    width: 100%;
-    border-collapse: collapse;
-    font-size: 14px;
-  }
-
-  thead {
-    background: #F5F4F0;
-  }
-
-  th {
-    padding: 12px 16px;
-    text-align: left;
-    font-weight: 600;
-    font-size: 12px;
-    text-transform: uppercase;
-    letter-spacing: 0.5px;
-    color: var(--text-secondary);
-    border-bottom: 1px solid var(--border);
-  }
-
-  td {
-    padding: 12px 16px;
-    border-bottom: 1px solid #f0efeb;
-    color: var(--text-secondary);
-  }
-
+  .callout-label { font-size: 11px; font-weight: 600; text-transform: uppercase; letter-spacing: 1px; color: var(--accent); margin-bottom: 0.5rem; }
+  .equation-card { background: var(--card-bg); border: 1px solid var(--border); border-radius: 12px; padding: 2rem; margin: 2rem 0; text-align: center; box-shadow: 0 2px 12px rgba(0,0,0,0.04); }
+  .equation-card .label { font-size: 11px; font-weight: 600; text-transform: uppercase; letter-spacing: 1.5px; color: var(--accent); margin-bottom: 1rem; }
+  .equation-card .note { font-size: 14px; color: var(--text-secondary); margin-top: 1rem; font-style: italic; }
+  .table-wrapper { overflow-x: auto; margin: 2rem 0; border-radius: 12px; border: 1px solid var(--border); background: var(--card-bg); box-shadow: 0 2px 12px rgba(0,0,0,0.04); }
+  table { width: 100%; border-collapse: collapse; font-size: 14px; }
+  thead { background: #F5F4F0; }
+  th { padding: 12px 16px; text-align: left; font-weight: 600; font-size: 12px; text-transform: uppercase; letter-spacing: 0.5px; color: var(--text-secondary); border-bottom: 1px solid var(--border); }
+  td { padding: 12px 16px; border-bottom: 1px solid #f0efeb; color: var(--text-secondary); }
   tr:last-child td { border-bottom: none; }
-
-  tr.highlight td {
-    background: var(--accent-bg);
-    font-weight: 600;
-    color: var(--accent);
-  }
-
-  /* ─── RESULT CARDS ─── */
-  .results-grid {
-    display: grid;
-    grid-template-columns: 1fr 1fr;
-    gap: 1rem;
-    margin: 2rem 0;
-  }
-
-  .result-card {
-    background: var(--card-bg);
-    border: 1px solid var(--border);
-    border-radius: 12px;
-    padding: 1.5rem;
-    box-shadow: 0 2px 8px rgba(0,0,0,0.03);
-    transition: transform 0.2s, box-shadow 0.2s;
-  }
-
-  .result-card:hover {
-    transform: translateY(-2px);
-    box-shadow: 0 4px 20px rgba(0,0,0,0.06);
-  }
-
-  .result-card .metric {
-    font-family: 'Instrument Serif', serif;
-    font-size: 2.4rem;
-    color: var(--accent);
-    line-height: 1;
-    margin-bottom: 0.3rem;
-  }
-
-  .result-card .metric-label {
-    font-size: 13px;
-    font-weight: 500;
-    color: var(--text-secondary);
-  }
-
-  /* ─── ALGORITHM BOX ─── */
-  .algorithm-box {
-    background: #0D0D0D;
-    color: #E8E6E0;
-    border-radius: 12px;
-    padding: 2rem;
-    margin: 2rem 0;
-    font-family: 'JetBrains Mono', monospace;
-    font-size: 13.5px;
-    line-height: 2;
-    overflow-x: auto;
-    box-shadow: 0 4px 24px rgba(0,0,0,0.15);
-  }
-
-  .algorithm-box .alg-title {
-    font-family: 'DM Sans', sans-serif;
-    font-size: 13px;
-    font-weight: 600;
-    text-transform: uppercase;
-    letter-spacing: 1.5px;
-    color: #E74C3C;
-    margin-bottom: 1rem;
-    padding-bottom: 0.8rem;
-    border-bottom: 1px solid rgba(255,255,255,0.1);
-  }
-
-  .algorithm-box .kw { color: #E74C3C; }
-  .algorithm-box .cm { color: #888; font-style: italic; }
-  .algorithm-box .fn { color: #F9E79F; }
-
-  /* ─── FIGURE ─── */
-  .figure {
-    margin: 2.5rem 0;
-    text-align: center;
-  }
-
-  .figure-placeholder {
-    background: linear-gradient(135deg, #F5F4F0, #E8E6E0);
-    border-radius: 12px;
-    padding: 3rem 2rem;
-    border: 1px dashed var(--border);
-    color: var(--text-secondary);
-    font-size: 14px;
-  }
-
-  .figure-caption {
-    font-size: 14px;
-    color: var(--text-secondary);
-    margin-top: 0.8rem;
-    font-style: italic;
-  }
-
-  /* ─── FLOW DIAGRAM ─── */
-  .flow-diagram {
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    gap: 0;
-    margin: 2.5rem 0;
-    flex-wrap: wrap;
-  }
-
-  .flow-step {
-    background: var(--card-bg);
-    border: 1px solid var(--border);
-    border-radius: 10px;
-    padding: 1rem 1.4rem;
-    text-align: center;
-    min-width: 130px;
-    box-shadow: 0 2px 8px rgba(0,0,0,0.03);
-  }
-
-  .flow-step .step-num {
-    font-size: 11px;
-    font-weight: 600;
-    color: var(--accent);
-    text-transform: uppercase;
-    letter-spacing: 1px;
-    margin-bottom: 0.3rem;
-  }
-
-  .flow-step .step-text {
-    font-size: 13.5px;
-    font-weight: 500;
-    color: var(--text);
-  }
-
-  .flow-arrow {
-    font-size: 20px;
-    color: var(--border);
-    padding: 0 8px;
-  }
-
-  /* ─── SECTION DIVIDER ─── */
-  .divider {
-    height: 1px;
-    background: var(--border);
-    margin: 3.5rem 0;
-    position: relative;
-  }
-
-  .divider::after {
-    content: '◆';
-    position: absolute;
-    left: 50%;
-    top: 50%;
-    transform: translate(-50%, -50%);
-    background: var(--bg);
-    padding: 0 12px;
-    color: var(--border);
-    font-size: 10px;
-  }
-
-  /* ─── FOOTER ─── */
-  .blog-footer {
-    background: #0D0D0D;
-    color: rgba(255,255,255,0.5);
-    padding: 4rem 0;
-    text-align: center;
-    font-size: 14px;
-  }
-
-  .blog-footer a {
-    color: #E74C3C;
-    text-decoration: none;
-  }
-
-  .footer-links {
-    display: flex;
-    justify-content: center;
-    gap: 2rem;
-    margin-top: 1rem;
-    flex-wrap: wrap;
-  }
-
-  .footer-links a {
-    border-bottom: 1px solid rgba(255,255,255,0.15);
-    padding-bottom: 2px;
-    transition: all 0.2s;
-  }
+  tr.highlight td { background: var(--accent-bg); font-weight: 600; color: var(--accent); }
+  .results-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 1rem; margin: 2rem 0; }
+  .result-card { background: var(--card-bg); border: 1px solid var(--border); border-radius: 12px; padding: 1.5rem; box-shadow: 0 2px 8px rgba(0,0,0,0.03); transition: transform 0.2s, box-shadow 0.2s; }
+  .result-card:hover { transform: translateY(-2px); box-shadow: 0 4px 20px rgba(0,0,0,0.06); }
+  .result-card .metric { font-family: 'Instrument Serif', serif; font-size: 2.4rem; color: var(--accent); line-height: 1; margin-bottom: 0.3rem; }
+  .result-card .metric-label { font-size: 13px; font-weight: 500; color: var(--text-secondary); }
+  .figure { margin: 2.5rem 0; text-align: center; }
+  .figure-caption { font-size: 14px; color: var(--text-secondary); margin-top: 0.8rem; font-style: italic; }
+  .flow-diagram { display: flex; align-items: center; justify-content: center; gap: 0; margin: 2.5rem 0; flex-wrap: wrap; }
+  .flow-step { background: var(--card-bg); border: 1px solid var(--border); border-radius: 10px; padding: 1rem 1.4rem; text-align: center; min-width: 130px; box-shadow: 0 2px 8px rgba(0,0,0,0.03); }
+  .flow-step .step-num { font-size: 11px; font-weight: 600; color: var(--accent); text-transform: uppercase; letter-spacing: 1px; margin-bottom: 0.3rem; }
+  .flow-step .step-text { font-size: 13.5px; font-weight: 500; color: var(--text); }
+  .flow-arrow { font-size: 20px; color: var(--border); padding: 0 8px; }
+  .divider { height: 1px; background: var(--border); margin: 3.5rem 0; position: relative; }
+  .divider::after { content: '◆'; position: absolute; left: 50%; top: 50%; transform: translate(-50%, -50%); background: var(--bg); padding: 0 12px; color: var(--border); font-size: 10px; }
+  .blog-footer { background: #0D0D0D; color: rgba(255,255,255,0.5); padding: 4rem 0; text-align: center; font-size: 14px; }
+  .blog-footer a { color: #E74C3C; text-decoration: none; }
+  .footer-links { display: flex; justify-content: center; gap: 2rem; margin-top: 1rem; flex-wrap: wrap; }
+  .footer-links a { border-bottom: 1px solid rgba(255,255,255,0.15); padding-bottom: 2px; transition: all 0.2s; }
   .footer-links a:hover { color: #fff; border-color: #E74C3C; }
-
-  /* ─── INLINE CODE ─── */
-  code {
-    font-family: 'JetBrains Mono', monospace;
-    font-size: 0.88em;
-    background: var(--code-bg);
-    padding: 2px 6px;
-    border-radius: 4px;
-  }
-
-  /* ─── SCROLL INDICATOR ─── */
-  .scroll-hint {
-    position: absolute;
-    bottom: 2rem;
-    left: 50%;
-    transform: translateX(-50%);
-    color: rgba(255,255,255,0.3);
-    font-size: 13px;
-    animation: float 2s ease-in-out infinite;
-    z-index: 3;
-  }
-
-  @keyframes float {
-    0%, 100% { transform: translateX(-50%) translateY(0); }
-    50% { transform: translateX(-50%) translateY(6px); }
-  }
-
-  .drop-cap::first-letter {
-    font-family: 'Instrument Serif', serif;
-    font-size: 3.8rem;
-    float: left;
-    line-height: 0.75;
-    margin: 0.1em 0.15em 0 0;
-    color: var(--accent);
-  }
-
-  /* ─── RESPONSIVE ─── */
-  @media (max-width: 640px) {
-    .results-grid { grid-template-columns: 1fr; }
-    .flow-diagram { flex-direction: column; }
-    .flow-arrow { transform: rotate(90deg); padding: 4px 0; }
-    .hero-meta { flex-direction: column; gap: 0.5rem; }
-  }
+  code { font-family: 'JetBrains Mono', monospace; font-size: 0.88em; background: var(--code-bg); padding: 2px 6px; border-radius: 4px; }
+  .scroll-hint { position: absolute; bottom: 2rem; left: 50%; transform: translateX(-50%); color: rgba(255,255,255,0.3); font-size: 13px; animation: float 2s ease-in-out infinite; z-index: 3; }
+  @keyframes float { 0%, 100% { transform: translateX(-50%) translateY(0); } 50% { transform: translateX(-50%) translateY(6px); } }
+  .drop-cap::first-letter { font-family: 'Instrument Serif', serif; font-size: 3.8rem; float: left; line-height: 0.75; margin: 0.1em 0.15em 0 0; color: var(--accent); }
+  @media (max-width: 640px) { .results-grid { grid-template-columns: 1fr; } .flow-diagram { flex-direction: column; } .flow-arrow { transform: rotate(90deg); padding: 4px 0; } .hero-meta { flex-direction: column; gap: 0.5rem; } }
 </style>
 </head>
 <body>
 
-<!-- ═══════════════ HERO ═══════════════ -->
 <section class="hero">
   <div class="hero-grid"></div>
   <div class="hero-content">
@@ -524,15 +105,13 @@
   <div class="scroll-hint">↓ Scroll to read</div>
 </section>
 
-<!-- ═══════════════ ARTICLE ═══════════════ -->
 <article>
   <div class="container">
 
-    <!-- ── INTRO ── -->
     <h2>The Problem with Explaining Black Boxes</h2>
-    <p class="drop-cap">Imagine a bank deploys a machine learning model to decide loan applications. A customer is denied credit, and — as the EU AI Act now requires — they ask for an explanation. The bank runs LIME, a popular explanation method, and learns that "employment length" was the most important factor. Reassured, they share this with the customer. But had they run LIME again, they might have gotten a different answer: "account balance" was most important. A third run might point to "age." Same model, same applicant, three different stories.</p>
+    <p class="drop-cap">Imagine a bank deploys a machine learning model to decide loan applications. A customer is denied credit and they ask for an explanation. The bank runs LIME, a popular explanation method, and learns that "employment length" was the most important factor. Reassured, they share this with the customer. But had they run LIME again, they might have gotten a different answer: "account balance" was most important. A third run might point to "age." Same model, same applicant, three different stories.</p>
 
-    <p>This isn't a contrived scenario. It's a well-documented weakness of perturbation-based explanation methods. These approaches — LIME, GLIME, BayLIME, and others — work by generating random perturbations around an input, querying the black-box model, and fitting a simple surrogate to approximate local behavior. The idea is elegant, but the execution has a fundamental flaw: <strong>the quality of the explanation depends entirely on which perturbations you happen to sample</strong>.</p>
+    <p>This isn't a contrived scenario. It's a well-documented weakness of perturbation-based explanation methods. The approaches like LIME, GLIME, BayesLIME, and others work by generating random perturbations around an input, querying the black-box model, and fitting a simple surrogate to approximate local behavior. The idea is elegant, but the execution has a fundamental flaw: <strong>the quality of the explanation depends entirely on which perturbations you happen to sample</strong>.</p>
 
     <p>Random or heuristic sampling leads to explanations that vary across runs, miss important regions of the input space, and provide no measure of how confident you should be in the result. When explanations are unstable and come without uncertainty estimates, they can be worse than no explanation at all — they create a false sense of understanding.</p>
 
@@ -547,16 +126,14 @@
 
     <div class="divider"></div>
 
-    <!-- ── WHAT GOES WRONG ── -->
     <h2>Why Existing Methods Fall Short</h2>
     <p>To understand what EAGLE does differently, it helps to see where current methods struggle. The figure below (from our paper) shows how different methods sample perturbations around a target instance on a simple 2D dataset. The differences are striking.</p>
 
-    <p><strong>LIME and BayLIME</strong> sample broadly in the vicinity of the instance but ignore regions where the surrogate model is uncertain. They may waste queries on areas that are already well-understood. <strong>GLIME</strong> goes to the other extreme — constraining perturbations so tightly around the instance that it misses the broader local structure, including the decision boundary. <strong>BayesLIME</strong> (Focus Sampling) does consider uncertainty, but only through predictive variance, which doesn't account for the locality of new candidates. It can drift toward uninformative regions far from the instance.</p>
+    <p><strong>LIME and BayLIME</strong> sample broadly in the vicinity of the instance but ignore regions where the surrogate model is uncertain. They may waste queries on areas that are already well-understood. <strong>GLIME</strong> goes to the other extreme — constraining perturbations so tightly around the instance that it misses the broader local structure, including the decision boundary. <strong>BayesLIME</strong> does consider uncertainty, but only through predictive variance, which doesn't account for the locality of new candidates. It can drift toward uninformative regions far from the instance.</p>
 
-    <!-- FIGURE: Perturbation Sampling Comparison -->
     <div class="figure" style="margin: 2.5rem 0;">
       <div style="background: var(--card-bg); border: 1px solid var(--border); border-radius: 12px; padding: 1.5rem; box-shadow: 0 2px 12px rgba(0,0,0,0.04); overflow: hidden;">
-        <img src="images/fig1_perturbations.png" alt="Perturbation strategies comparison across methods on the make_moons dataset" style="width: 100%; border-radius: 8px; display: block;">
+        <img src="fig1_perturbations.png" alt="Perturbation strategies comparison across methods on the make_moons dataset" style="width: 100%; border-radius: 8px; display: block;">
       </div>
       <div class="figure-caption">Perturbation strategies on the make_moons dataset (n=100). EAGLE selects perturbations that respect both locality and regions of high epistemic uncertainty, covering both sides of the decision boundary.</div>
     </div>
@@ -565,7 +142,6 @@
 
     <div class="divider"></div>
 
-    <!-- ── WHAT IS EAGLE ── -->
     <h2>EAGLE: Active Learning Meets Explainability</h2>
     <p>EAGLE reframes perturbation selection for post-hoc explanations as an <strong>information-theoretic active learning problem</strong>. The core idea is simple: instead of generating perturbations blindly and hoping they're informative, EAGLE iteratively asks — <em>"given everything I've learned so far, which perturbation would teach me the most about the model's local behavior?"</em></p>
 
@@ -574,25 +150,13 @@
     <p>Here's how a single explanation is produced:</p>
 
     <div class="flow-diagram">
-      <div class="flow-step">
-        <div class="step-num">Step 1</div>
-        <div class="step-text">Seed perturbations around instance x₀</div>
-      </div>
+      <div class="flow-step"><div class="step-num">Step 1</div><div class="step-text">Seed perturbations around instance x₀</div></div>
       <div class="flow-arrow">→</div>
-      <div class="flow-step">
-        <div class="step-num">Step 2</div>
-        <div class="step-text">Fit Bayesian linear surrogate</div>
-      </div>
+      <div class="flow-step"><div class="step-num">Step 2</div><div class="step-text">Fit Bayesian linear surrogate</div></div>
       <div class="flow-arrow">→</div>
-      <div class="flow-step">
-        <div class="step-num">Step 3</div>
-        <div class="step-text">Score candidates via acquisition function</div>
-      </div>
+      <div class="flow-step"><div class="step-num">Step 3</div><div class="step-text">Score candidates via acquisition function</div></div>
       <div class="flow-arrow">→</div>
-      <div class="flow-step">
-        <div class="step-num">Step 4</div>
-        <div class="step-text">Select top-B, query black-box, refit</div>
-      </div>
+      <div class="flow-step"><div class="step-num">Step 4</div><div class="step-text">Select top-B, query black-box, refit</div></div>
     </div>
 
     <h3>The Acquisition Function: Where the Magic Happens</h3>
@@ -600,63 +164,49 @@
 
     <div class="equation-card">
       <div class="label">EAGLE Acquisition Function</div>
-      <code>z* = arg max<sub>z</sub> &nbsp; π<sub>x₀</sub>(z) · z<sup>⊤</sup>V<sub>ϕ</sub>z</code>
+      <div style="font-size: 1.2rem; margin: 0.5rem 0;">$$\mathbf{z}^* = \arg\max_{\mathbf{z}} \; \pi_{x_0}(\mathbf{z}) \cdot \mathbf{z}^\top V_\phi \, \mathbf{z}$$</div>
       <div class="note">Select perturbations that maximize locality-weighted posterior uncertainty.</div>
     </div>
 
     <p>This expression is deceptively simple, but packs two crucial ideas into a single product:</p>
 
-    <p><strong>The uncertainty term <code>z⊤Vϕz</code></strong> measures how much the candidate perturbation z aligns with directions in feature space where the surrogate model's parameters are still uncertain. Think of the posterior covariance V<sub>ϕ</sub> as an ellipsoid representing "what we don't know yet" — this term picks perturbations that probe the longest axes of that ellipsoid, where a new observation would collapse the most uncertainty.</p>
+    <p><strong>The uncertainty term $\mathbf{z}^\top V_\phi \mathbf{z}$</strong> measures how much the candidate perturbation $\mathbf{z}$ aligns with directions in feature space where the surrogate model's parameters are still uncertain. Think of the posterior covariance $V_\phi$ as an ellipsoid representing "what we don't know yet" — this term picks perturbations that probe the longest axes of that ellipsoid, where a new observation would collapse the most uncertainty.</p>
 
-    <p><strong>The locality kernel <code>πx₀(z)</code></strong> ensures that we don't chase uncertainty into irrelevant regions of the input space. An informative perturbation on the far side of the dataset might reduce posterior variance, but it tells us nothing about what the model is doing near our instance of interest. The locality weight keeps sampling focused.</p>
+    <p><strong>The locality kernel $\pi_{x_0}(\mathbf{z})$</strong> ensures that we don't chase uncertainty into irrelevant regions of the input space. An informative perturbation on the far side of the dataset might reduce posterior variance, but it tells us nothing about what the model is doing near our instance of interest. The locality weight keeps sampling focused.</p>
 
-    <p>The product of these two terms is what makes EAGLE unique. Existing methods handle them separately or ignore one entirely. BayesLIME, for instance, evaluates <code>z⊤Vϕz</code> (scaled by a global factor s²) but <strong>does not incorporate the locality kernel when selecting new candidates</strong> — it only uses locality when fitting the surrogate to already-observed points. This subtle but important gap means BayesLIME's sampling can drift away from the neighborhood that matters.</p>
+    <p>The product of these two terms is what makes EAGLE unique. Existing methods handle them separately or ignore one entirely. BayesLIME, for instance, evaluates $\mathbf{z}^\top V_\phi \mathbf{z}$ (scaled by a global factor $s^2$) but <strong>does not incorporate the locality kernel when selecting new candidates</strong> — it only uses locality when fitting the surrogate to already-observed points. This subtle but important gap means BayesLIME's sampling can drift away from the neighborhood that matters.</p>
 
     <div class="divider"></div>
 
-    <!-- ── THEORY ── -->
     <h2>Theoretical Guarantees</h2>
     <p>A key advantage of EAGLE's principled derivation is that it enables formal theoretical analysis — something rarely available for perturbation-based explainers. Most existing methods are designed by intuition and validated only empirically. EAGLE comes with provable bounds that tell you exactly what to expect.</p>
 
     <h3>The Diminishing Returns Phenomenon</h3>
-    <p>We prove (Lemma 1) that the cumulative information gained under EAGLE's acquisition strategy grows as <strong>O(d log t)</strong>, where d is the feature dimension and t is the number of queries. What does this mean practically?</p>
+    <p>We prove (Lemma 1) that the cumulative information gained under EAGLE's acquisition strategy grows as $\mathcal{O}(d \log t)$, where $d$ is the feature dimension and $t$ is the number of queries. What does this mean practically?</p>
 
-    <p>The first few perturbations are enormously informative — they rapidly carve out the shape of the local decision boundary. But each subsequent perturbation teaches you a little less than the one before. This is the diminishing returns phenomenon, and it's actually good news: it means EAGLE front-loads the most valuable queries. If you have a tight query budget, EAGLE extracts maximum value from every single black-box call. The multiplicative factor d tells us that higher-dimensional problems need proportionally more queries, which matches intuition — more features means more directions to explore.</p>
+    <p>The first few perturbations are enormously informative — they rapidly carve out the shape of the local decision boundary. But each subsequent perturbation teaches you a little less than the one before. This is the diminishing returns phenomenon, and it's actually good news: it means EAGLE front-loads the most valuable queries. If you have a tight query budget, EAGLE extracts maximum value from every single black-box call. The multiplicative factor $d$ tells us that higher-dimensional problems need proportionally more queries, which matches intuition — more features means more directions to explore.</p>
 
     <h3>How Many Queries Do You Need?</h3>
     <p>We derive high-probability bounds on the estimation error of the explanation weights (Theorem 2), which lead to a concrete sample complexity result:</p>
 
     <div class="equation-card">
       <div class="label">Sample Complexity</div>
-      <code>t = O( (d + log(1/δ)) / (κν²) )</code>
-      <div class="note">Queries grow linearly with dimension d, logarithmically with confidence 1/δ, and quadratically with inverse accuracy 1/ν².</div>
+      <div style="font-size: 1.2rem; margin: 0.5rem 0;">$$t = \mathcal{O}\!\left(\frac{d + \log(1/\delta)}{\kappa\,\nu^2}\right)$$</div>
+      <div class="note">Queries grow linearly with dimension $d$, logarithmically with confidence $1/\delta$, and quadratically with inverse accuracy $1/\nu^2$.</div>
     </div>
 
-    <p>This result gives practitioners a practical recipe. Want tighter explanations (smaller ν)? You'll need quadratically more queries — that's the price of precision. But want higher confidence (smaller δ, i.e., stronger guarantees that the explanation is close to the truth)? That only costs a mild logarithmic penalty. In a credit scoring model with 20 features, for instance, you can get a reliable explanation with a budget that scales as roughly 20 × log(confidence), not 20² — and EAGLE tells you exactly when to stop querying.</p>
+    <p>This result gives practitioners a practical recipe. Want tighter explanations (smaller $\nu$)? You'll need quadratically more queries — that's the price of precision. But want higher confidence (smaller $\delta$, i.e., stronger guarantees that the explanation is close to the truth)? That only costs a mild logarithmic penalty. In a credit scoring model with 20 features, for instance, you can get a reliable explanation with a budget that scales as roughly $20 \times \log(\text{confidence})$, not $20^2$ — and EAGLE tells you exactly when to stop querying.</p>
 
     <div class="divider"></div>
 
-    <!-- ── RESULTS ── -->
     <h2>Does It Actually Work? Empirical Results</h2>
     <p>Theory is only half the story. We evaluated EAGLE across six datasets — four tabular (COMPAS, German Credit, Adult Income, Magic Gamma Telescope) and two image (MNIST, ImageNet) — against eight baselines including LIME, GLIME, BayLIME, BayesLIME, US-LIME, Tilia, DLIME, and UnRAvEL. The short answer: EAGLE consistently outperforms across the board.</p>
 
     <div class="results-grid">
-      <div class="result-card">
-        <div class="metric">0.822</div>
-        <div class="metric-label">Jaccard stability on Adult (vs. 0.674 BayesLIME)</div>
-      </div>
-      <div class="result-card">
-        <div class="metric">1.5×</div>
-        <div class="metric-label">Higher D-efficiency at n=500 vs. baselines</div>
-      </div>
-      <div class="result-card">
-        <div class="metric">22–38%</div>
-        <div class="metric-label">Query savings to match BayesLIME D-efficiency</div>
-      </div>
-      <div class="result-card">
-        <div class="metric">52–88%</div>
-        <div class="metric-label">Query savings on CCM metric</div>
-      </div>
+      <div class="result-card"><div class="metric">0.822</div><div class="metric-label">Jaccard stability on Adult (vs. 0.674 BayesLIME)</div></div>
+      <div class="result-card"><div class="metric">1.5×</div><div class="metric-label">Higher D-efficiency at n=500 vs. baselines</div></div>
+      <div class="result-card"><div class="metric">22–38%</div><div class="metric-label">Query savings to match BayesLIME D-efficiency</div></div>
+      <div class="result-card"><div class="metric">52–88%</div><div class="metric-label">Query savings on CCM metric</div></div>
     </div>
 
     <h3>Explanation Stability</h3>
@@ -664,9 +214,7 @@
 
     <div class="table-wrapper">
       <table>
-        <thead>
-          <tr><th>Method</th><th>COMPAS</th><th>German</th><th>Adult</th><th>MAGIC</th><th>MNIST</th><th>ImageNet</th></tr>
-        </thead>
+        <thead><tr><th>Method</th><th>COMPAS</th><th>German</th><th>Adult</th><th>MAGIC</th><th>MNIST</th><th>ImageNet</th></tr></thead>
         <tbody>
           <tr><td>LIME</td><td>0.772</td><td>0.645</td><td>0.669</td><td>0.647</td><td>0.733</td><td>0.704</td></tr>
           <tr><td>GLIME</td><td>0.635</td><td>0.546</td><td>0.559</td><td>0.624</td><td>0.519</td><td>0.920</td></tr>
@@ -678,16 +226,14 @@
       </table>
     </div>
 
-
     <h3>Sampling Quality & Convergence</h3>
-    <p>We measured D-efficiency (reduction in posterior covariance volume) and cumulative information gain (CIG) as perturbations are acquired. EAGLE exhibits a steeper convergence trajectory from the very first acquisition steps — at n=500, it achieves roughly 1.5× the D-efficiency of BayesLIME and BayLIME. More importantly, the D-efficiency curves grow linearly in the plot (logarithmically in t), exactly matching the O(d log t) scaling predicted by our Lemma 1. It's always reassuring when theory and experiments agree.</p>
+    <p>We measured D-efficiency (reduction in posterior covariance volume) and cumulative information gain (CIG) as perturbations are acquired. EAGLE exhibits a steeper convergence trajectory from the very first acquisition steps — at n=500, it achieves roughly 1.5× the D-efficiency of BayesLIME and BayLIME. More importantly, the D-efficiency curves grow linearly in the plot (logarithmically in $t$), exactly matching the $\mathcal{O}(d \log t)$ scaling predicted by our Lemma 1. It's always reassuring when theory and experiments agree.</p>
 
-    <!-- FIGURE: D-efficiency Convergence -->
     <div class="figure" style="margin: 2.5rem 0;">
       <div style="background: var(--card-bg); border: 1px solid var(--border); border-radius: 12px; padding: 1.5rem; box-shadow: 0 2px 12px rgba(0,0,0,0.04); overflow: hidden;">
-        <img src="images/fig2_convergence.png" alt="D-efficiency and CIG convergence on Adult dataset" style="width: 100%; border-radius: 8px; display: block;">
+        <img src="fig2_convergence.png" alt="D-efficiency and CIG convergence on Adult dataset" style="width: 100%; border-radius: 8px; display: block;">
       </div>
-      <div class="figure-caption">D-efficiency (solid) and cumulative information gain (dashed) on the Adult dataset. EAGLE consistently achieves higher efficiency, confirming the O(d log t) scaling from Lemma 1.</div>
+      <div class="figure-caption">D-efficiency (solid) and cumulative information gain (dashed) on the Adult dataset. EAGLE consistently achieves higher efficiency, confirming the $\mathcal{O}(d \log t)$ scaling from Lemma 1.</div>
     </div>
 
     <h3>Sample Efficiency: Doing More with Less</h3>
@@ -698,25 +244,22 @@
 
     <div class="divider"></div>
 
-    <!-- ── TIGHTER UNCERTAINTY ── -->
     <h2>Tighter Uncertainty: Knowing What You Don't Know</h2>
     <p>Beyond producing stable point estimates, EAGLE yields <strong>significantly narrower credible intervals</strong> on feature attributions. The 90% posterior credible intervals from EAGLE are consistently tighter than those from BayesLIME and BayLIME across all features, meaning practitioners can more confidently separate genuinely important features from noise.</p>
 
     <p>To make this concrete, consider a spam detection example from our paper. Given the message <em>"Hi mom, thanks for the great lunch yesterday. Also don't forget to call 08001234567 NOW to win your FREE prize!"</em>, EAGLE's explanation correctly highlights spam-indicative words like "FREE," "prize," "NOW," and "win" with strong positive attributions (green), while personal words like "mom," "thanks," and "lunch" get negative attributions (red, i.e., evidence against spam). Crucially, the border thickness around each word encodes the uncertainty — and EAGLE's borders are thin, meaning it's confident in these attributions.</p>
 
-    <!-- FIGURE: Spam Explanation Visualization -->
     <div class="figure" style="margin: 2rem 0;">
       <div style="background: var(--card-bg); border: 1px solid var(--border); border-radius: 12px; padding: 1.5rem; box-shadow: 0 2px 12px rgba(0,0,0,0.04); overflow: hidden;">
-        <img src="images/fig3_spam.png" alt="EAGLE explanation visualization for spam detection" style="width: 100%; border-radius: 8px; display: block;">
+        <img src="fig3_spam.png" alt="EAGLE explanation visualization for spam detection" style="width: 100%; border-radius: 8px; display: block;">
       </div>
       <div class="figure-caption">EAGLE's word-level attributions for spam detection. Green highlights positive contributions toward SPAM, red indicates negative contributions, and border thickness represents attribution uncertainty.</div>
     </div>
 
-    <p>This matters in practice. In a recidivism prediction model, knowing that "prior offenses" has an attribution of 0.15 ± 0.02 versus 0.15 ± 0.12 is the difference between an actionable explanation and a meaningless one. The first says "this feature clearly matters"; the second says "we're not really sure."</p>
+    <p>This matters in practice. In a recidivism prediction model, knowing that "prior offenses" has an attribution of $0.15 \pm 0.02$ versus $0.15 \pm 0.12$ is the difference between an actionable explanation and a meaningless one. The first says "this feature clearly matters"; the second says "we're not really sure."</p>
 
     <div class="divider"></div>
 
-    <!-- ── WHY IT MATTERS ── -->
     <h2>The Bigger Picture</h2>
     <p>Post-hoc explanation methods sit at a critical juncture in the AI pipeline. They're often the last line of defense between an opaque model and the people affected by its decisions — patients, loan applicants, defendants. If these explanations are unreliable, the entire accountability chain breaks down.</p>
 
@@ -725,14 +268,13 @@
     <div class="callout">
       <div class="callout-label">Key Takeaways</div>
       <p><strong>Principled acquisition:</strong> EAGLE derives a closed-form acquisition function from information-theoretic first principles, replacing ad-hoc heuristics with a mathematically grounded strategy.</p>
-      <p><strong>Theoretical guarantees:</strong> O(d log t) information gain bounds and sample complexity guarantees — rare in the post-hoc explainability literature, and practically useful for budgeting queries.</p>
+      <p><strong>Theoretical guarantees:</strong> $\mathcal{O}(d \log t)$ information gain bounds and sample complexity guarantees — rare in the post-hoc explainability literature, and practically useful for budgeting queries.</p>
       <p><strong>Consistent improvements:</strong> Higher stability, faster convergence, tighter uncertainty, and lower runtime across both tabular and image benchmarks — with no dataset-specific tuning.</p>
       <p><strong>Drop-in compatible:</strong> EAGLE uses the same BLR surrogate as BayesLIME, so the improvement comes purely from smarter sampling. Switching is straightforward.</p>
     </div>
 
     <div class="divider"></div>
 
-    <!-- ── LOOKING AHEAD ── -->
     <h2>Looking Ahead</h2>
     <p>EAGLE opens several exciting research directions. The current greedy top-B batch selection could be replaced with batch-optimal strategies that account for redundancy between selected perturbations. Extending the framework to non-linear surrogates — perhaps using Bayesian neural networks or Gaussian processes — could capture more complex local decision boundaries. And integrating faithfulness metrics (like comprehensiveness and sufficiency) directly into the active learning loop could produce explanations that are not only stable and confident, but also faithful to the black-box model's true behavior.</p>
 
@@ -746,12 +288,16 @@
   </div>
 </article>
 
-<!-- ═══════════════ FOOTER ═══════════════ -->
 <footer class="blog-footer">
   <div class="container">
     <p>EAGLE — Expected Active Gain for Local Explanations</p>
     <p style="margin-top: 0.3rem;">Sumedha Chugh · Ranjitha Prasad · Nazreen Shah — IIIT-Delhi</p>
     <div class="footer-links">
       <a href="https://arxiv.org/abs/2603.14894" target="_blank">Paper</a>
-      <a href="/cdn-cgi/l/email-protection#5526203830313d3436153c3c3c21317b34367b3c3b">Contact</a>
-    
+      <a href="mailto:sumedhac@iiitd.ac.in">Contact</a>
+    </div>
+  </div>
+</footer>
+
+</body>
+</html>
